@@ -12,7 +12,6 @@ module.exports = Backbone.View.extend({
   'el': '.tweet-explorer',
   'template': akTemplate(tpl),
   'render': function render () {
-    console.log(this.template());
     this.$el.append(this.template());
     return this;
   }
