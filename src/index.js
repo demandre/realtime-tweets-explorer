@@ -1,29 +1,24 @@
-// Dependencies
+// Libs
 var Backbone = require('backbone');
-
 // Collections
-var todoCollection = require('./collections/todo.js');
-
+var tweetCollection = require('./collections/tweet.js');
 // Controllers
-var TodoController = require('./controllers/todo');
-
+var TweetExplorerController = require('./controllers/TweetExplorer');
 // Router
 var Router = Backbone.Router.extend({
   'routes': {
-    '*actions': 'tasksList'
+    '*action': 'default'
   }
 });
-
 var router = new Router();
 
-router.on('route:tasksList', function defautRoute () {
-  var todoController = new TodoController({
-    'collection': todoCollection
-  });
+// CSS
+require('./assets/reset.scss');
 
-  todoController.render();
+router.on('route:default', function defaultView () {
+  var tweetExplorerController = new TweetExplorerController({'collection': tweetCollection});
+
+  tweetExplorerController.render();
 });
 
-Backbone.history.start({
-  'pushState': true
-});
+Backbone.history.start({'pushState': true});
