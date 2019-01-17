@@ -7,9 +7,6 @@ var tpl = require('./index.tpl');
 var TweetList = require('./components/TweetList');
 var TweetMap = require('./components/TweetMap');
 
-// CSS
-require('./index.scss');
-
 // Controller - view
 module.exports = Backbone.View.extend({
   'el': '#app',

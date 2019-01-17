@@ -4,9 +4,6 @@ var akTemplate = require('ak-template');
 // Template
 var tpl = require('./index.tpl');
 
-// CSS
-require('./index.scss');
-
 // Controller - view
 module.exports = Backbone.View.extend({
   'el': '.tweet-explorer',

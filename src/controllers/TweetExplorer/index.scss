@@ -1,3 +1,7 @@
+@import "./components/TweetList/index.scss";
+@import "./components/TweetMap/index.scss";
+
+
 .tweet-explorer {
   display: grid;
   grid-template-columns: 30% 70%;

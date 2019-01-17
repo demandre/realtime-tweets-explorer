@@ -4,6 +4,9 @@ var Backbone = require('backbone');
 var tweetCollection = require('./collections/tweet.js');
 // Controllers
 var TweetExplorerController = require('./controllers/TweetExplorer');
+
+// CSS
+require('./assets/index.scss');
 // Router
 var Router = Backbone.Router.extend({
   'routes': {
@@ -11,9 +14,6 @@ var Router = Backbone.Router.extend({
   }
 });
 var router = new Router();
-
-// CSS
-require('./assets/reset.scss');
 
 router.on('route:default', function defaultView () {
   var tweetExplorerController = new TweetExplorerController({'collection': tweetCollection});

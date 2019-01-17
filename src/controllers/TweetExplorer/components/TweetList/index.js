@@ -5,8 +5,6 @@ var akTemplate = require('ak-template');
 var tpl = require('./index.tpl');
 
 akTemplate.globals.moment = require('moment');
-// CSS
-require('./index.scss');
 
 // Controller - view
 module.exports = Backbone.View.extend({
