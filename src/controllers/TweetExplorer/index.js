@@ -25,6 +25,7 @@ module.exports = Backbone.View.extend({
     var tweetList = new TweetList({'collection': this.collection});
     var tweetMap = new TweetMap({'collection': this.collection});
 
+    tweetList.listenTo(this.collection, 'add', tweetList.render);
     tweetList.render();
     tweetMap.render();
     return this;

@@ -11,7 +11,8 @@ module.exports = Backbone.View.extend({
   'el': '.tweet-explorer',
   'template': akTemplate(tpl),
   'render': function render () {
-    this.$el.append(this.template(this.collection));
+    Backbone.$('.tweet-list').remove();
+    this.$el.prepend(this.template(this.collection));
     return this;
   }
 });
