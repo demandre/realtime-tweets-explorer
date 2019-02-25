@@ -22,7 +22,7 @@
 
 .tweet-container {
   width: auto;
-  height: 10%;
+  height: 5%;
   margin: 2px 6px 0px 5px;
   display: table;
 }
@@ -34,6 +34,21 @@
   padding: 3px;
   background-color: white;
   border-radius: 5px;
+}
+
+.new-tweet {
+   animation: 1s slidein;
+   position: relative;
+}
+
+@keyframes slidein {
+  from {
+    left: -100px;
+  }
+
+  to {
+    left: 0px;
+  }
 }
 
 .tweet-info {

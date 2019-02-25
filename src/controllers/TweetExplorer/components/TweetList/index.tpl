@@ -3,7 +3,7 @@
   <% for (var i = locals.length-1; i >= 0; i-- ) { %>
     <% var tweet=locals.models[i].attributes; %>
     <div class="tweet-container">
-      <div class="tweet">
+      <div class="tweet <% if (i == locals.length-1) { %> new-tweet <% } %>">
         <div class="tweet-info">
           <img class="tweet-user-avatar" src="<%=tweet.user.profile_image_url %>">
           <div class="tweet-info-text">
