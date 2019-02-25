@@ -1,6 +1,6 @@
 <div class="tweet-list">
 
-  <% for (var i = 0; i < locals.length; i++ ) { %>
+  <% for (var i = locals.length-1; i >= 0; i-- ) { %>
     <% var tweet=locals.models[i].attributes; %>
     <div class="tweet-container">
       <div class="tweet">
