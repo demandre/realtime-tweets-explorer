@@ -13,8 +13,4 @@ var Tweets = Backbone.Collection.extend({
 
 var tweets = new Tweets();
 
-response.forEach(function tweetLoop (item) {
-  tweets.addTweet(item);
-});
-
 module.exports = tweets;
