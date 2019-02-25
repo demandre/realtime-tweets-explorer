@@ -44,10 +44,12 @@
 @keyframes slidein {
   from {
     left: -100px;
+    opacity: 0.1;
   }
 
   to {
     left: 0px;
+    opacity: 1;
   }
 }
 
