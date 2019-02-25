@@ -5,12 +5,12 @@ module.exports = Backbone.Model.extend({
     Backbone.Model.apply(this, arguments);
   },
   'defaults': {
-    'createdAt': null,
+    'created_at': null,
     'id_str': null,
     'text': null,
     'user': {
       'name': null,
-      'username': null,
+      'screen_name': null,
       'profile_image_url': 'https://i.guim.co.uk/img/media/acb1627786c251362c4bc87c1f53fa39b49d8d3d/274_0_821_1026/master/821.jpg?width=300&quality=85&auto=format&fit=max&s=4db76b58cf107407415cf9d80c7b6c15'
     },
     'reply_count': 0,

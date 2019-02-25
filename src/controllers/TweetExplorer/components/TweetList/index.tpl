@@ -8,10 +8,10 @@
           <img class="tweet-user-avatar" src="<%=tweet.user.profile_image_url %>">
           <div class="tweet-info-text">
             <strong class="tweet-user-fullname"><%=tweet.user.name %></strong>
-            <a href="[USER_URL]">
-              <span class="tweet-user-username">@<b><%=tweet.user.username %></b></span>
+            <a target="blank" href="https://www.twitter.com/<%=tweet.user.screen_name %>">
+              <span class="tweet-user-username">@<b><%=tweet.user.screen_name %></b></span>
             </a>
-            <span class="tweet-timestamp">- <%=locals.moment(new Date(tweet.createdAt)).fromNow() %></span>
+            <span class="tweet-timestamp">- <%=locals.moment(new Date(tweet.created_at)).fromNow() %></span>
           </div>
         </div>
         <div class="tweet-content"><%=tweet.text %></div>
