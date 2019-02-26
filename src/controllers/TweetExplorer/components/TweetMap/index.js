@@ -14,26 +14,26 @@ module.exports = Backbone.View.extend({
     var container = Backbone.$(this.template()).appendTo(this.$el);
 
     // Scene, Camera, Renderer
-    let renderer = new THREE.WebGLRenderer();
-    let scene = new THREE.Scene();
-    let aspect = container.innerWidth() / container.innerHeight();
-    let camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1500);
-    let cameraAutoRotation = false;
-    let orbitControls = new OrbitControls(camera);
-    let light = new THREE.AmbientLight(0xffffff);
+    var renderer = new THREE.WebGLRenderer();
+    var scene = new THREE.Scene();
+    var aspect = container.innerWidth() / container.innerHeight();
+    var camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1500);
+    var cameraAutoRotation = false;
+    var orbitControls = new OrbitControls(camera);
+    var light = new THREE.AmbientLight(0xffffff);
 
     // Texture Loader
-    let textureLoader = new THREE.TextureLoader();
+    var textureLoader = new THREE.TextureLoader();
 
     // Planet Proto
-    let planetProto = {
+    var planetProto = {
       'sphere': function sphere (size) {
-        let sphere1 = new THREE.SphereGeometry(size, 32, 32);
+        var sphere1 = new THREE.SphereGeometry(size, 32, 32);
 
         return sphere1;
       },
       'material': function material (options) {
-        let material1 = new THREE.MeshPhongMaterial();
+        var material1 = new THREE.MeshPhongMaterial();
 
         if (options) {
           for (var property in options) {
@@ -45,7 +45,7 @@ module.exports = Backbone.View.extend({
       },
       'glowMaterial': function glowMaterial (intensity, fade, color) {
         // Custom glow shader from https://github.com/stemkoski/stemkoski.github.com/tree/master/Three.js
-        let glowMaterial1 = new THREE.ShaderMaterial({
+        var glowMaterial1 = new THREE.ShaderMaterial({
           'uniforms': {
             'c': {
               'type': 'f',
@@ -91,7 +91,7 @@ module.exports = Backbone.View.extend({
         return glowMaterial1;
       },
       'texture': function texture (material, property, uri) {
-        let textureLoader = new THREE.TextureLoader();
+        var textureLoader = new THREE.TextureLoader();
 
         textureLoader.crossOrigin = true;
         textureLoader.load(
@@ -104,29 +104,29 @@ module.exports = Backbone.View.extend({
       }
     };
 
-    let createPlanet = function createPlanet (options) {
+    var createPlanet = function createPlanet (options) {
       // Create the planet's Surface
-      let surfaceGeometry = planetProto.sphere(options.surface.size);
-      let surfaceMaterial = planetProto.material(options.surface.material);
-      let surface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
+      var surfaceGeometry = planetProto.sphere(options.surface.size);
+      var surfaceMaterial = planetProto.material(options.surface.material);
+      var surface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
 
       // Create the planet's Atmosphere
-      let atmosphereGeometry = planetProto.sphere(options.surface.size + options.atmosphere.size);
-      let atmosphereMaterialDefaults = {
+      var atmosphereGeometry = planetProto.sphere(options.surface.size + options.atmosphere.size);
+      var atmosphereMaterialDefaults = {
         'side': THREE.DoubleSide,
         'transparent': true
       };
-      let atmosphereMaterialOptions = Object.assign(atmosphereMaterialDefaults, options.atmosphere.material);
-      let atmosphereMaterial = planetProto.material(atmosphereMaterialOptions);
-      let atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
+      var atmosphereMaterialOptions = Object.assign(atmosphereMaterialDefaults, options.atmosphere.material);
+      var atmosphereMaterial = planetProto.material(atmosphereMaterialOptions);
+      var atmosphere = new THREE.Mesh(atmosphereGeometry, atmosphereMaterial);
 
       // Create the planet's Atmospheric glow
-      let atmosphericGlowGeometry = planetProto.sphere(options.surface.size + options.atmosphere.size + options.atmosphere.glow.size);
-      let atmosphericGlowMaterial = planetProto.glowMaterial(options.atmosphere.glow.intensity, options.atmosphere.glow.fade, options.atmosphere.glow.color);
-      let atmosphericGlow = new THREE.Mesh(atmosphericGlowGeometry, atmosphericGlowMaterial);
+      var atmosphericGlowGeometry = planetProto.sphere(options.surface.size + options.atmosphere.size + options.atmosphere.glow.size);
+      var atmosphericGlowMaterial = planetProto.glowMaterial(options.atmosphere.glow.intensity, options.atmosphere.glow.fade, options.atmosphere.glow.color);
+      var atmosphericGlow = new THREE.Mesh(atmosphericGlowGeometry, atmosphericGlowMaterial);
 
       // Nest the planet's Surface and Atmosphere into a planet object
-      let planet = new THREE.Object3D();
+      var planet = new THREE.Object3D();
 
       surface.name = 'surface';
       atmosphere.name = 'atmosphere';
@@ -156,7 +156,7 @@ module.exports = Backbone.View.extend({
       return planet;
     };
 
-    let earth = createPlanet({
+    var earth = createPlanet({
       'surface': {
         'size': 0.5,
         'material': {
@@ -189,7 +189,7 @@ module.exports = Backbone.View.extend({
     });
 
     // Marker Proto
-    let markerProto = {
+    var markerProto = {
       'latLongToVector3': function latLongToVector3 (latitude, longitude, radius, height) {
         var phi = latitude * Math.PI / 180;
         var theta = (longitude - 180) * Math.PI / 180;
@@ -201,11 +201,11 @@ module.exports = Backbone.View.extend({
         return new THREE.Vector3(x, y, z);
       },
       'marker': function marker (size, color, vector3Position) {
-        let markerGeometry = new THREE.SphereGeometry(size);
-        let markerMaterial = new THREE.MeshLambertMaterial({
+        var markerGeometry = new THREE.SphereGeometry(size);
+        var markerMaterial = new THREE.MeshLambertMaterial({
           'color': color
         });
-        let markerMesh = new THREE.Mesh(markerGeometry, markerMaterial);
+        var markerMesh = new THREE.Mesh(markerGeometry, markerMaterial);
 
         markerMesh.position.copy(vector3Position);
 
@@ -214,19 +214,19 @@ module.exports = Backbone.View.extend({
     };
 
     // Place Marker
-    let placeMarker = function placeMarker (object, options) {
-      let position = markerProto.latLongToVector3(options.latitude, options.longitude, options.radius, options.height);
-      let marker = markerProto.marker(options.size, options.color, position);
+    var placeMarker = function placeMarker (object, options) {
+      var position = markerProto.latLongToVector3(options.latitude, options.longitude, options.radius, options.height);
+      var marker = markerProto.marker(options.size, options.color, position);
 
       object.add(marker);
     };
 
     // Galaxy
-    let galaxyGeometry = new THREE.SphereGeometry(100, 32, 32);
-    let galaxyMaterial = new THREE.MeshBasicMaterial({
+    var galaxyGeometry = new THREE.SphereGeometry(100, 32, 32);
+    var galaxyMaterial = new THREE.MeshBasicMaterial({
       'side': THREE.BackSide
     });
-    let galaxy = new THREE.Mesh(galaxyGeometry, galaxyMaterial);
+    var galaxy = new THREE.Mesh(galaxyGeometry, galaxyMaterial);
 
     // Load Galaxy Textures
     textureLoader.crossOrigin = true;
@@ -262,7 +262,7 @@ module.exports = Backbone.View.extend({
     });
 
     // Main render function
-    let renderEarth = function render () {
+    var renderEarth = function render () {
       earth.getObjectByName('surface').rotation.y += 1 / 32 * 0.01;
       earth.getObjectByName('atmosphere').rotation.y += 1 / 16 * 0.01;
       camera.lookAt(earth.position);
