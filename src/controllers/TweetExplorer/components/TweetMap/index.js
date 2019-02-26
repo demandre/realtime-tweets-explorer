@@ -10,6 +10,9 @@ var tpl = require('./index.tpl');
 module.exports = Backbone.View.extend({
   'el': '.tweet-explorer',
   'template': akTemplate(tpl),
+  'earth': null,
+  'markerProto': null,
+  'placeMarker': null,
   'render': function render () {
     var container = Backbone.$(this.template()).appendTo(this.$el);
 
@@ -189,7 +192,7 @@ module.exports = Backbone.View.extend({
     });
 
     // Marker Proto
-    var markerProto = {
+    this.markerProto = {
       'latLongToVector3': function latLongToVector3 (latitude, longitude, radius, height) {
         var phi = latitude * Math.PI / 180;
         var theta = (longitude - 180) * Math.PI / 180;
@@ -214,9 +217,9 @@ module.exports = Backbone.View.extend({
     };
 
     // Place Marker
-    var placeMarker = function placeMarker (object, options) {
-      var position = markerProto.latLongToVector3(options.latitude, options.longitude, options.radius, options.height);
-      var marker = markerProto.marker(options.size, options.color, position);
+    this.placeMarker = function placeMarker (object, options) {
+      var position = this.markerProto.latLongToVector3(options.latitude, options.longitude, options.radius, options.height);
+      var marker = this.markerProto.marker(options.size, options.color, position);
 
       object.add(marker);
     };
@@ -272,7 +275,7 @@ module.exports = Backbone.View.extend({
 
     renderEarth();
 
-    placeMarker(earth.getObjectByName('surface'), {
+    this.placeMarker(earth.getObjectByName('surface'), {
       'latitude': 49,
       'longitude': 49,
       'radius': 0.5,
@@ -281,6 +284,18 @@ module.exports = Backbone.View.extend({
       'color': '0xfff000'
     });
 
+    this.earth = earth;
+
     return this;
+  },
+  'refreshMarkers': function placeMarkers () {
+    this.placeMarker(this.earth.getObjectByName('surface'), {
+      'latitude': 45,
+      'longitude': 45,
+      'radius': 0.5,
+      'height': 0,
+      'size': 0.01,
+      'color': 0xfff000
+    });
   }
 });
