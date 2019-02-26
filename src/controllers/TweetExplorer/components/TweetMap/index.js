@@ -3,7 +3,6 @@ var Backbone = require('backbone');
 var akTemplate = require('ak-template');
 const THREE = require('three');
 var OrbitControls = require('three-orbit-controls')(THREE);
-var dat = require('dat.gui');
 // Template
 var tpl = require('./index.tpl');
 
@@ -12,57 +11,16 @@ module.exports = Backbone.View.extend({
   'el': '.tweet-explorer',
   'template': akTemplate(tpl),
   'render': function render () {
-    /**
     var container = Backbone.$(this.template()).appendTo(this.$el);
-    var renderer = new THREE.WebGLRenderer();
-
-    renderer.setSize(500, 500);
-    var camera = new THREE.PerspectiveCamera(45, 500 / 500, 0.1, 10000);
-
-    camera.position.set(0, 0, 500);
-    var scene = new THREE.Scene();
-
-    scene.background = new THREE.Color(0x000);
-    scene.add(camera);
-    var globe = new THREE.Group();
-
-    scene.add(globe);
-    var loader = new THREE.TextureLoader();
-
-    loader.load(require('../../../../assets/land_ocean_ice_cloud_2048.jpg'), function load (texture) {
-      // Create the sphere
-      var sphere = new THREE.SphereGeometry(200, 50, 50);
-      // Map the texture to the material.
-      var material = new THREE.MeshBasicMaterial({'map': texture, 'overdraw': 0.5});
-      // Create a new mesh with sphere geometry.
-      var mesh = new THREE.Mesh(sphere, material);
-
-      // Add mesh to globe
-      globe.add(mesh);
-    });
-    globe.position.z = - 300;
-    var pointLight = new THREE.PointLight(0xFFFFFF);
-
-    pointLight.position.x = 10;
-    pointLight.position.y = 50;
-    pointLight.position.z = 400;
-    scene.add(pointLight);
-
-    container.append(renderer.domElement);
-**/
 
     // Scene, Camera, Renderer
     let renderer = new THREE.WebGLRenderer();
     let scene = new THREE.Scene();
-    let aspect = window.innerWidth / window.innerHeight;
+    let aspect = container.innerWidth() / container.innerHeight();
     let camera = new THREE.PerspectiveCamera(45, aspect, 0.1, 1500);
-    let cameraRotation = 0;
-    let cameraRotationSpeed = 0.001;
-    let cameraAutoRotation = true;
+    let cameraAutoRotation = false;
     let orbitControls = new OrbitControls(camera);
-
-    // Lights
-    let spotLight = new THREE.SpotLight(0xffffff, 1, 0, 10, 2);
+    let light = new THREE.AmbientLight(0xffffff);
 
     // Texture Loader
     let textureLoader = new THREE.TextureLoader();
@@ -215,7 +173,7 @@ module.exports = Backbone.View.extend({
       'atmosphere': {
         'size': 0.003,
         'material': {
-          'opacity': 0.8
+          'opacity': 0.3
         },
         'textures': {
           'map': 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/141228/earthcloudmap.jpg',
@@ -263,34 +221,6 @@ module.exports = Backbone.View.extend({
       object.add(marker);
     };
 
-    // Place Marker At Address
-    let placeMarkerAtAddress = function placeMarkerAtAddress (address, color) {
-      let encodedLocation = address.replace(/\s/g, '+');
-      let httpRequest = new XMLHttpRequest();
-
-      httpRequest.open('GET', 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodedLocation);
-      httpRequest.send(null);
-      httpRequest.onreadystatechange = function onreadystatechange () {
-        if (httpRequest.readyState === 4 && httpRequest.status === 200) {
-          let result = JSON.parse(httpRequest.responseText);
-
-          if (result.results.length > 0) {
-            let latitude = result.results[0].geometry.location.lat;
-            let longitude = result.results[0].geometry.location.lng;
-
-            placeMarker(earth.getObjectByName('surface'), {
-              'latitude': latitude,
-              'longitude': longitude,
-              'radius': 0.5,
-              'height': 0,
-              'size': 0.01,
-              'color': color
-            });
-          }
-        }
-      };
-    };
-
     // Galaxy
     let galaxyGeometry = new THREE.SphereGeometry(100, 32, 32);
     let galaxyMaterial = new THREE.MeshBasicMaterial({
@@ -309,18 +239,15 @@ module.exports = Backbone.View.extend({
     );
 
     // Scene, Camera, Renderer Configuration
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    this.$el.append(renderer.domElement);
+    renderer.setSize(container.innerWidth(), container.innerHeight());
+    container.append(renderer.domElement);
 
     camera.position.set(1, 1, 1);
     orbitControls.enabled = ! cameraAutoRotation;
 
     scene.add(camera);
-    scene.add(spotLight);
     scene.add(earth);
-
-    // Light Configurations
-    spotLight.position.set(2, 0, 1);
+    scene.add(light);
 
     // Mesh Configurations
     earth.receiveShadow = true;
@@ -329,104 +256,31 @@ module.exports = Backbone.View.extend({
 
     // On window resize, adjust camera aspect ratio and renderer size
     window.addEventListener('resize', function resize () {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.aspect = container.innerWidth() / container.innerHeight();
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setSize(container.innerWidth(), container.innerHeight());
     });
 
     // Main render function
-    let render1 = function render () {
+    let renderEarth = function render () {
       earth.getObjectByName('surface').rotation.y += 1 / 32 * 0.01;
       earth.getObjectByName('atmosphere').rotation.y += 1 / 16 * 0.01;
-      if (cameraAutoRotation) {
-        cameraRotation += cameraRotationSpeed;
-        camera.position.y = 0;
-        camera.position.x = 2 * Math.sin(cameraRotation);
-        camera.position.z = 2 * Math.cos(cameraRotation);
-        camera.lookAt(earth.position);
-      }
+      camera.lookAt(earth.position);
       requestAnimationFrame(render);
       renderer.render(scene, camera);
     };
 
-    render1();
+    renderEarth();
 
-    // dat.gui
-    var gui = new dat.GUI();
-    var guiCamera = gui.addFolder('Camera');
-    var guiSurface = gui.addFolder('Surface');
-    var guiMarkers = guiSurface.addFolder('Markers');
-    var guiAtmosphere = gui.addFolder('Atmosphere');
-    var guiAtmosphericGlow = guiAtmosphere.addFolder('Glow');
-
-    // dat.gui controls object ---- NEW START
-    function CameraControl () {
-      this.speed = cameraRotationSpeed;
-      this.orbitControls = ! cameraAutoRotation;
-    }
-
-    var cameraControls = new CameraControl();
-
-    var surfaceControls = function surfaceControls () {
-      this.rotation = 0;
-      this.bumpScale = 0.05;
-      this.shininess = 10;
-    };
-
-    var markersControls = function markersControls () {
-      this.address = '';
-      this.color = 0xff0000;
-      this.placeMarker = function placemarker () {
-        placeMarkerAtAddress(this.address, this.color);
-      };
-    };
-
-    var atmosphereControls = function atmosphereControls () {
-      this.opacity = 0.8;
-    };
-
-    var atmosphericGlowControls = function atmosphericGlowControls () {
-      this.intensity = 0.7;
-      this.fade = 7;
-      this.color = 0x93cfef;
-    };
-
-    // dat.gui controls
-    guiCamera.add(cameraControls, 'speed', 0, 0.1).step(0.001).onChange(function speedchange (value) {
-      cameraRotationSpeed = value;
-    });
-    guiCamera.add(cameraControls, 'orbitControls').onChange(function orbitcontrols (value) {
-      cameraAutoRotation = ! value;
-      orbitControls.enabled = value;
+    placeMarker(earth.getObjectByName('surface'), {
+      'latitude': 49,
+      'longitude': 49,
+      'radius': 0.5,
+      'height': 0,
+      'size': 0.01,
+      'color': '0xfff000'
     });
 
-    guiSurface.add(surfaceControls, 'rotation', 0, 6).onChange(function surfaceControls (value) {
-      earth.getObjectByName('surface').rotation.y = value;
-    });
-    guiSurface.add(surfaceControls, 'bumpScale', 0, 1).step(0.01).onChange(function bumpchange (value) {
-      earth.getObjectByName('surface').material.bumpScale = value;
-    });
-    guiSurface.add(surfaceControls, 'shininess', 0, 30).onChange(function shininesschange (value) {
-      earth.getObjectByName('surface').material.shininess = value;
-    });
-
-    guiMarkers.add(markersControls, 'address');
-    guiMarkers.addColor(markersControls, 'color');
-    guiMarkers.add(markersControls, 'placeMarker');
-
-    guiAtmosphere.add(atmosphereControls, 'opacity', 0, 1).onChange(function opacitychange (value) {
-      earth.getObjectByName('atmosphere').material.opacity = value;
-    });
-
-    guiAtmosphericGlow.add(atmosphericGlowControls, 'intensity', 0, 1).onChange(function intensitychange (value) {
-      earth.getObjectByName('atmosphericGlow').material.uniforms['c'].value = value;
-    });
-    guiAtmosphericGlow.add(atmosphericGlowControls, 'fade', 0, 50).onChange(function fadechange (value) {
-      earth.getObjectByName('atmosphericGlow').material.uniforms['p'].value = value;
-    });
-    guiAtmosphericGlow.addColor(atmosphericGlowControls, 'color').onChange(function colorchange (value) {
-      earth.getObjectByName('atmosphericGlow').material.uniforms.glowColor.value.setHex(value);
-    });
     return this;
   }
 });
