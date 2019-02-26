@@ -275,27 +275,23 @@ module.exports = Backbone.View.extend({
 
     renderEarth();
 
-    this.placeMarker(earth.getObjectByName('surface'), {
-      'latitude': 49,
-      'longitude': 49,
-      'radius': 0.5,
-      'height': 0,
-      'size': 0.01,
-      'color': '0xfff000'
-    });
-
     this.earth = earth;
 
     return this;
   },
-  'refreshMarkers': function placeMarkers () {
-    this.placeMarker(this.earth.getObjectByName('surface'), {
-      'latitude': 45,
-      'longitude': 45,
-      'radius': 0.5,
-      'height': 0,
-      'size': 0.01,
-      'color': 0xfff000
-    });
+  'refreshMarkers': function refreshMarkers () {
+    this.collection.forEach(function foreach (model) {
+      if (model.attributes.geo !== null) {
+        console.log(model.attributes.geo);
+        this.placeMarker(this.earth.getObjectByName('surface'), {
+          'latitude': model.attributes.geo.coordinates[0],
+          'longitude': model.attributes.geo.coordinates[1],
+          'radius': 0.5,
+          'height': 0,
+          'size': 0.01,
+          'color': 0xfff000
+        });
+      }
+    }.bind(this));
   }
 });

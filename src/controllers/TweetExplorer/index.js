@@ -14,7 +14,7 @@ module.exports = Backbone.View.extend({
   'el': '#app',
   'template': akTemplate(tpl),
   'initialize': function initialize () {
-    socket.emit('search', 'javascript');
+    socket.emit('search', '@realdonaldtrump');
     socket.on('tweet', function onTweet (tweet) {
       console.log(tweet);
       this.collection.addTweet(tweet);
@@ -26,6 +26,7 @@ module.exports = Backbone.View.extend({
     var tweetMap = new TweetMap({'collection': this.collection});
 
     tweetList.listenTo(this.collection, 'add', tweetList.render);
+    tweetMap.listenTo(this.collection, 'add', tweetMap.refreshMarkers);
     tweetList.render();
     tweetMap.render();
     return this;
