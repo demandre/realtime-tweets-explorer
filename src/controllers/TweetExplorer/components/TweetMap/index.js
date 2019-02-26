@@ -282,7 +282,6 @@ module.exports = Backbone.View.extend({
   'refreshMarkers': function refreshMarkers () {
     this.collection.forEach(function foreach (model) {
       if (model.attributes.geo !== null) {
-        console.log(model.attributes.geo);
         this.placeMarker(this.earth.getObjectByName('surface'), {
           'latitude': model.attributes.geo.coordinates[0],
           'longitude': model.attributes.geo.coordinates[1],
