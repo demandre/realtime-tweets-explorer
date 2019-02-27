@@ -279,6 +279,9 @@ module.exports = Backbone.View.extend({
 
     return this;
   },
+  /**
+   * Place collection markers on map
+   */
   'refreshMarkers': function refreshMarkers () {
     this.collection.forEach(function foreach (model) {
       if (model.attributes.coordinates !== null) {

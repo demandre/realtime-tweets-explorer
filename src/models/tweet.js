@@ -18,6 +18,11 @@ module.exports = Backbone.Model.extend({
     'favorite_count': 0,
     'coordinates': null
   },
+  /**
+   * Formats tweet given.
+   * @param {object} tweet - The non-formatted tweet.
+   * @return {object} formattedTweet - The formatted tweet.
+   */
   'formatter': function formatter (tweet) {
     var formattedTweet = {
       'created_at': tweet.created_at,
