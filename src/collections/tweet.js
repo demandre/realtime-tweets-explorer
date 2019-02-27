@@ -10,7 +10,7 @@ var Tweets = Backbone.Collection.extend({
     if (this.length > 20) {
       this.remove(this.at(0));
     }
-    this.add(new Tweet(tweet));
+    this.add(new Tweet(new Tweet().formatter(tweet)));
   }
 });
 

@@ -18,7 +18,22 @@ module.exports = Backbone.Model.extend({
     'favorite_count': 0,
     'coordinates': null
   },
-  'formatSource': function formatSource (tweet) {
-    return tweet;
+  'formatter': function formatter (tweet) {
+    var formattedTweet = {
+      'created_at': tweet.created_at,
+      'id_str': tweet.id_str,
+      'text': tweet.text,
+      'user': {
+        'name': tweet.user.name,
+        'screen_name': tweet.user.screen_name,
+        'profile_image_url': tweet.user.profile_image_url
+      },
+      'reply_count': tweet.reply_count,
+      'retweet_count': tweet.retweet_count,
+      'favorite_count': tweet.favorite_count,
+      'coordinates': tweet.geo ? tweet.geo.coordinates : null
+    };
+
+    return formattedTweet;
   }
 });

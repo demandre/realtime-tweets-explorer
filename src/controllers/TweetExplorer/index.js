@@ -14,7 +14,7 @@ module.exports = Backbone.View.extend({
   'el': '#app',
   'template': akTemplate(tpl),
   'initialize': function initialize () {
-    socket.emit('search', '@realdonaldtrump');
+    socket.emit('search', 'channel');
     socket.on('tweet', function onTweet (tweet) {
       this.collection.addTweet(tweet);
     }.bind(this));
